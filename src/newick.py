@@ -57,4 +57,20 @@ def parse(tree: str) -> Tree:
     >>> parse("(A, (B, C))")
     (A,(B,C))
     """
-    ...
+    stack = list()
+    for x in tokenize(tree):
+        if x == "(":
+            stack.append(x)
+        elif x == ")":
+            new_branch = list()
+            leaf = stack.pop()
+            while leaf != "(":
+                new_branch.append(leaf)
+                leaf = stack.pop()
+            new_branch.reverse()
+            stack.append(Node(new_branch))
+        else:
+            stack.append(Leaf(x))
+    return stack.pop()
+
+print(parse("((A, B), C, ((D, E), F))"))
